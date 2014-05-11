@@ -133,6 +133,6 @@ if [ -d themes/${THEME}/static ] ; then
 fi
 
 # copy any static contents into the build directory, smartly
-rsync -av static/* build/
+rsync -av static/* build/$BASE_DIR/
 
 # EOF
