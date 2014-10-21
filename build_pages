@@ -53,6 +53,11 @@ for ITEM in $(cat $DB/run_list) ; do
   # ugly replace syntax, but works in bash v3
   BUILD_DIR=$(echo $SRC_DIR | sed -e s#^content#build${BASE_URL}#)
 
+  # fully qualified URI
+  FQ_URI="${FQ_BASE}${BUILD_DIR}/${SRC_NAME}.html"
+  FQ_URI=$(echo $FQ_URI | sed -e s#build##)
+  echo "FQ: ${FQ_URI}"
+
   # extract metadata from content files
   ITEM_TITLE=$(grep '<!-- title:' $ITEM | sed -e 's/^.*: //' | sed -e 's/ -->$//')
   ITEM_TAGS=$(grep '<!-- tags:' $ITEM | sed -e 's/^.*: //' | sed -e 's/ -->$//')
@@ -95,11 +100,14 @@ for ITEM in $(cat $DB/run_list) ; do
     echo "$ITEM|$ITEM_TITLE|$ITEM_CATS" >> $DB/cats.csv
   fi
 
-  # wrap the content within the specified templatea, making substitutions when
+  # wrap the content within the specified templates, making substitutions when
   # necessary; long term will have to do multiple replacements per file.
 
   # template magic: header
   sed "s/{{TITLE}}/${ITEM_TITLE}/" themes/${THEME}/HEADER.html | \
+  sed "s/{{HANDLE}}/${HANDLE}/" | \
+  sed "s#{{URL}}#${FQ_URI}#" | \
+  sed "s/{{SUMMARY}}/${ITEM_SUMMARY}/" | \
   sed "s#{{BASE_URL}}#${BASE_URL}#g" \
     > $BUILD_DIR/$SRC_NAME.html
 

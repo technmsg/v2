@@ -36,6 +36,7 @@ fi
 OUT="build${BASE_URL}/index.html"
 echo "building $OUT, last $LIMIT"
 sed "s/{{TITLE}}/v2 - Last ${LIMIT} Entries/" themes/${THEME}/HEADER.html | \
+  sed '/<meta property="twitter:/d' | \
   sed "s#{{BASE_URL}}#${BASE_URL}#g" > $OUT
 echo "<h1>v2 - Last ${LIMIT} Entries</h1>" >> $OUT
 grep -e "$DS" $DB | sed -e "s#^content/#/#" | \
@@ -49,6 +50,7 @@ sed "s/{{LAST_MOD}}/${TODAY}/" themes/${THEME}/FOOTER.html | \
 OUT="build${BASE_URL}/all.html"
 echo "building $OUT"
 sed "s/{{TITLE}}/v2 - All Entries/" themes/${THEME}/HEADER.html | \
+  sed '/<meta property="twitter:/d' | \
   sed "s#{{BASE_URL}}#${BASE_URL}#g" > $OUT
 echo "<h1>v2 - All Entries</h1>" >> $OUT
 grep -e "$DS" $DB | sed -e "s#^content/#/#" | sort -r | \
