@@ -124,7 +124,9 @@ for ITEM in $(cat $DB/run_list) ; do
 
   # template magic: footer
   LAST_MOD=$(echo $ITEM_MOD_DATE | sed -e "s/T.*$//")
-  sed "s/{{LAST_MOD}}/${LAST_MOD}/" themes/${THEME}/FOOTER.html | \
+  EDIT_URL="${GIT_BASE}${ITEM}"
+  sed "s/{{LAST_MOD}}/${LAST_MOD}/g" themes/${THEME}/FOOTER.html | \
+  sed "s#{{EDIT_URL}}#${EDIT_URL}#g" | \
   sed "s#{{BASE_URL}}#${BASE_URL}#g" >> $BUILD_DIR/$SRC_NAME.html
 
 done
