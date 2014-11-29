@@ -1,0 +1,30 @@
+#!/bin/sh
+#
+# a few pre-build tasks
+#
+DB=".db" 
+
+# show a list of modified files since last build
+echo "Checking for modified content..."
+if [ -e $DB/last_gen ] ; then
+  find -L content -type f -newer $DB/last_gen
+else
+  echo " build DB not found" 
+fi
+
+# check modification times
+echo
+echo "Checking modification times..."
+find content/ -name "*.md" -exec ./scripts/check_update_times.sh {} \;
+
+# prompt to spell check modified files
+echo
+read -p "Spell check modified files? " -n 1 -r
+if [[ $REPLY =~ ^[Yy]$ ]] ; then
+  echo
+  find -L content/ -type f -newer $DB/last_gen -name "*.md" -exec aspell -d, --master=en -c '{}' \;
+else
+  echo
+fi 
+
+# EOF
