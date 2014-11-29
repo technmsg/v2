@@ -56,7 +56,6 @@ for ITEM in $(cat $DB/run_list) ; do
   # fully qualified URI
   FQ_URI="${FQ_BASE}${BUILD_DIR}/${SRC_NAME}.html"
   FQ_URI=$(echo $FQ_URI | sed -e s#build##)
-  echo "FQ: ${FQ_URI}"
 
   # extract metadata from content files
   ITEM_TITLE=$(grep '<!-- title:' $ITEM | sed -e 's/^.*: //' | sed -e 's/ -->$//')
@@ -72,31 +71,32 @@ for ITEM in $(cat $DB/run_list) ; do
 
   # for now, all entries must have a title
   if [[ -z $ITEM_TITLE ]] ; then
-    echo "ignoring $ITEM, no title"
+    echo "- ignoring $ITEM, no title"
     continue
   fi
 
   # setup the build directory
   if [ ! -d $BUILD_DIR ] ; then
-    mkdir -pv $BUILD_DIR || $(echo "Could not create build dir." ; exit 1)
+    mkdir -pv $BUILD_DIR || $(echo "  * Could not create build dir." ; exit 1)
   fi
 
   # only process known file extensions
   if [[ "$SRC_TYPE" == "md" || "$SRC_TYPE" == "html" ]] ; then
-    echo "$ITEM"
+    echo "+ $ITEM"
+    echo "  FQ: ${FQ_URI}"
   else
-    echo "ignoring: unknown type ($SRC_TYPE)"
+    echo "- ignoring: unknown type ($SRC_TYPE)"
     continue
   fi
 
   # dump some metadata for offline indexing
   echo "$ITEM|$ITEM_TITLE|$ITEM_SUMMARY" >> $DB/index.csv
-  if [ ! -z $ITEM_TAGS ] ; then
-    echo "+tags $ITEM_TAGS"
+  if [ ! -z "$ITEM_TAGS" ] ; then
+    echo "  tags $ITEM_TAGS"
     echo "$ITEM|$ITEM_TITLE|$ITEM_TAGS" >> $DB/tags.csv
   fi
   if [ ! -z $ITEM_CATS ] ; then
-    echo "+cats $ITEM_CATS"
+    echo "  cats $ITEM_CATS"
     echo "$ITEM|$ITEM_TITLE|$ITEM_CATS" >> $DB/cats.csv
   fi
 
@@ -115,10 +115,10 @@ for ITEM in $(cat $DB/run_list) ; do
 
   # convert content body if necessary, otherwise use raw HTML
   if [[ "$SRC_TYPE" == "md" ]] ; then
-    echo "convert: $ITEM -> $BUILD_DIR/$SRC_NAME.html"
+    echo "  convert: $ITEM -> $BUILD_DIR/$SRC_NAME.html"
     tools/Markdown_1.0.1/Markdown.pl $ITEM >> $BUILD_DIR/$SRC_NAME.html
   elif [[ "$SRC_TYPE" == "html" ]] ; then
-    echo "concat : $ITEM -> $BUILD_DIR/$SRC_NAME.html"
+    echo "  concat : $ITEM -> $BUILD_DIR/$SRC_NAME.html"
     cat $ITEM >> $BUILD_DIR/$SRC_NAME.html
   fi
 
