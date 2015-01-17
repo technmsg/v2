@@ -58,4 +58,10 @@ grep -e "$DS" $DB | sed -e "s#^content/#/#" | sort -r | \
 sed "s/{{LAST_MOD}}/${TODAY}/" themes/${THEME}/FOOTER_index.html | \
   sed "s#{{BASE_URL}}#${BASE_URL}#g" >> $OUT
 
+# sitemap
+OUT="build${BASE_URL}/sitemap.xml"
+echo "building ${OUT}"
+sed -e "s#^content/#/#" ${DB} | sort -r | \
+  awk -f scripts/sitemap.awk -v baseurl="${FQ_BASE}${BASE_URL}" > ${OUT}
+
 # EOF
