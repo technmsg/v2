@@ -73,6 +73,7 @@ grep -e "$DS" $DB | sed -e "s#^content/#/#" | sort -r | \
   head -${LIMIT} | \
   awk -f scripts/atom.awk \
     -v baseurl="${FQ_BASE}${BASE_URL}" \
+    -v fqbase="${FQ_BASE}" \
     -v blog_title="${BLOG_TITLE}" \
     -v blog_author="${BLOG_AUTHOR}" \
     -v now="${NOW}" > ${OUT}

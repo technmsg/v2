@@ -20,6 +20,7 @@ $1 ~ /[0-9]+/ {
   split($1, d, "/"); 
 
   # convert source .md references to .html
+  orig = $1
   sub("\.md$", ".html", $1)
 
   # in the event that baseurl arg is empty, set to null
@@ -35,7 +36,15 @@ $1 ~ /[0-9]+/ {
   printf "  <id>%s%s</id>\n", baseurl, $1
   printf "  <updated>%s</updated>\n", $4
   printf "  <content type=\"html\">\n"
-  printf "    %s\n", $3
+
+  # summary only
+  #printf "    %s\n", $3
+
+  # full text -- also converting relative Markdown links to absolute
+  printf "    <![CDATA["
+  system("./tools/Markdown_1.0.1/Markdown.pl content" orig " | sed -e 's#href=\"/#href=\"" fqbase "/#g'") |& getline
+  printf "    ]]>\n"
+
   printf "  </content>\n"
   printf "</entry>\n\n"
 
