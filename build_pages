@@ -85,7 +85,7 @@ for ITEM in $(sort -u $DB/run_list) ; do
   fi
 
   # dump some metadata for offline indexing
-  echo "$ITEM|$ITEM_TITLE|$ITEM_SUMMARY" >> $DB/index.csv
+  echo "$ITEM|$ITEM_TITLE|$ITEM_SUMMARY|$ITEM_MOD_DATE" >> $DB/index.csv
   if [ ! -z "$ITEM_TAGS" ] ; then
     #echo "  tags $ITEM_TAGS"
     echo "$ITEM|$ITEM_TITLE|$ITEM_TAGS" >> $DB/tags.csv

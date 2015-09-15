@@ -4,7 +4,7 @@ BEGIN { FS="|"; }
 
 # only handle items w/ dates -- grep should already handle this, but never
 # hurts to check it again.
-/[0-9]+/ { 
+$1 ~ /[0-9]+/ { 
 
   # extract the date components from the path
   split($1, d, "/"); 
