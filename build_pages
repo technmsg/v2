@@ -18,18 +18,13 @@ if [ ! -d themes/$THEME ] ; then
   exit
 fi
 
-# Clean up old indexes.
-rm $DB/tags.csv $DB/cats.csv $DB/index.csv
-
-# determine what's been updated
-# generate/copy html, into templates
-
-# get the extenion; convert md to markdown, leave html alone
-
-# 
+# incremental build, unless forced 
 if [ "$1" == "force" ] ; then
   echo "forcing content updates"
   rm $DB/last_gen
+
+  # Clean up old indexes.
+  rm $DB/tags.csv $DB/cats.csv $DB/index.csv
 fi
 
 # If we know about the last generation, find updated content; if not (or if we
@@ -42,7 +37,7 @@ else
 fi
 
 # Step through the content queue.
-for ITEM in $(cat $DB/run_list) ; do
+for ITEM in $(sort -u $DB/run_list) ; do
 
   SRC_DIR=$(dirname $ITEM)
   SRC_FILE=$(basename "$ITEM")
@@ -65,6 +60,7 @@ for ITEM in $(cat $DB/run_list) ; do
   ITEM_MOD_DATE=$(grep '<!-- updated:' $ITEM | sed -e 's/^.*: //' | sed -e 's/ -->$//')
   ITEM_SUMMARY=$(grep '<!-- summary:' $ITEM | sed -e 's/^.*: //' | sed -e 's/ -->$//')
 
+  # if our modification date isn't set, use the publication date
   if [[ ! -z $ITEM_PUB_DATE && -z $ITEM_MOD_DATE ]] ; then
     $ITEM_MOD_DATE = $ITEM_PUB_DATE
   fi

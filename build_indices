@@ -22,13 +22,17 @@ TODAY="${YEAR}-${MONTH}-${DAY}"
 
 if [ ! -d themes/$THEME ] ; then
   echo "Theme not found, aborting."
-  exit1
+  exit 1
 fi
 
 if [ ! -f $DB ] ; then
   echo "DB not found, aborting."
   exit 1
 fi
+
+# sort the index, removing dupes
+sort -u -k1,2 ${DB} > ${DB}.unique
+mv ${DB}.unique ${DB}
 
 #
 # main index - last X entries
