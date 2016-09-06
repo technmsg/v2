@@ -71,7 +71,7 @@ sed -e "s#^content/#/#" ${DB} | sort -r | \
 # atom
 OUT="build${BASE_URL}/index.atom.xml"
 echo "building ${OUT}"
-NOW=$(date '+%FT%T%:z')
+NOW=$(date '+%FT%T%z')
 
 grep -e "$DS" $DB | sed -e "s#^content/#/#" | sort -r | \
   head -${LIMIT} | \
