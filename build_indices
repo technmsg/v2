@@ -71,7 +71,11 @@ sed -e "s#^content/#/#" ${DB} | sort -r | \
 # atom
 OUT="build${BASE_URL}/index.atom.xml"
 echo "building ${OUT}"
-NOW=$(date '+%FT%T%z')
+if [ $(uname) = "Darwin" ] ; then
+  NOW=$(date '+%FT%T%z' | sed -e 's/00$/:00/') 
+else
+  NOW=$(date '+%FT%T%:z')
+fi
 
 grep -e "$DS" $DB | sed -e "s#^content/#/#" | sort -r | \
   head -${LIMIT} | \
