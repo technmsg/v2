@@ -42,7 +42,8 @@ $1 ~ /[0-9]+/ {
 
   # full text -- also converting relative Markdown links to absolute
   printf "    <![CDATA["
-  system("./tools/Markdown_1.0.1/Markdown.pl content" orig " | sed -e 's#href=\"/#href=\"" fqbase "/#g'") |& getline
+#  system("./tools/Markdown_1.0.1/Markdown.pl content" orig " | sed -e 's#href=\"/#href=\"" fqbase "/#g'") |& getline
+  system("./tools/Markdown_1.0.1/Markdown.pl content" orig " | sed -e 's#href=\"/#href=\"" fqbase "/#g'") 
   printf "    ]]>\n"
 
   printf "  </content>\n"
