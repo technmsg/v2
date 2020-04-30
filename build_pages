@@ -18,6 +18,9 @@ if [ ! -d themes/$THEME ] ; then
   exit
 fi
 
+if [ ! -d build ] ; then mkdir build ; fi
+if [ ! -d $DB ] ; then mkdir $DB ; fi
+
 # incremental build, unless forced 
 if [ "$1" == "force" ] ; then
   echo "forcing content updates"
